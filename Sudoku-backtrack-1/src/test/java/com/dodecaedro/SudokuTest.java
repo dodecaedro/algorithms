@@ -156,8 +156,27 @@ public class SudokuTest {
 	
 	@Test
 	public void testNumberRepeatedBlock() {
-		//assertFalse(goalNode.isAnyNumberRepeatedBlock());
+		assertFalse(goalNode.isAnyNumberRepeatedBlock());
 		assertTrue(boardWithRepeatedNumbersInBlock.isAnyNumberRepeatedBlock());		
+	}
+	
+	@Test
+	public void testGoal() {
+		assertTrue(goalNode.isGoal());
+		assertFalse(nonCompleteNode.isGoal());
+		assertFalse(boardWithRepeatedNumbersInRow.isGoal());
+		assertFalse(boardWithRepeatedNumbersInColumn.isGoal());
+		assertFalse(boardWithRepeatedNumbersInBlock.isGoal());
+	}
+	
+	@Test
+	public void testLeaf() {
+		assertTrue(goalNode.isLeaf());
+		assertTrue(boardWithRepeatedNumbersInRow.isLeaf());
+		assertTrue(boardWithRepeatedNumbersInColumn.isLeaf());
+		assertTrue(boardWithRepeatedNumbersInBlock.isLeaf());
+		assertFalse(nonCompleteNode.isLeaf());
+		assertFalse(new SudokuNode().isLeaf());
 	}
 
 	private static int[][] copyUsingForLoop(int[][] aArray) {
