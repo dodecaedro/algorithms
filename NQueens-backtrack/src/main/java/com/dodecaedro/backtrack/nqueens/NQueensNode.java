@@ -14,7 +14,7 @@ import com.dodecaedro.backtrack.BacktrackNode;
  * 
  */
 public class NQueensNode implements BacktrackNode {
-	private static final int N = 4;
+	public static final int SIZE = 4;
 
 	private List<Queen> queens;
 	private List<BacktrackNode> childrenNodes;
@@ -37,7 +37,7 @@ public class NQueensNode implements BacktrackNode {
 	public boolean isLeaf() {
 		// it's a leaf when it has all the queens, or there's no point in
 		// continuing
-		return queens.size() == N || anyQueenInDanger();
+		return queens.size() == SIZE || anyQueenInDanger();
 	}
 
 	/*
@@ -47,7 +47,7 @@ public class NQueensNode implements BacktrackNode {
 	 */
 	public boolean isGoal() {
 		// the goal is to have all the n queens where none endangers any other
-		return queens.size() == N && !anyQueenInDanger();
+		return queens.size() == SIZE && !anyQueenInDanger();
 	}
 
 	/*
@@ -57,8 +57,8 @@ public class NQueensNode implements BacktrackNode {
 	 */
 	private void generateChildrenNodes() {
 		List<BacktrackNode> nodes = new ArrayList<BacktrackNode>();
-		for (int y = 1; y <= N; y++) {
-			for (int x = 1; x <= N; x++) {
+		for (int y = 1; y <= SIZE; y++) {
+			for (int x = 1; x <= SIZE; x++) {
 				if (!hasQueen(x, y)) {
 					// make a copy of the current node which includes current queens
 					NQueensNode childrenNode = new NQueensNode(this);
@@ -78,19 +78,20 @@ public class NQueensNode implements BacktrackNode {
 		return childrenNodes;
 	}
 
-	private boolean anyQueenInDanger() {
+	public boolean anyQueenInDanger() {
 		for (Queen queen : this.queens) {
 			for (Queen compareQueen : this.queens) {
 				// don't compare a queen with herself
 				if (!queen.equals(compareQueen)) {
 					// is same horizontal row or vertical column?
-					if (queen.isInXRow(compareQueen.getPositionX()) || 
-							queen.isInYColumn(compareQueen.getPositionY())) {
-						System.out.println("Collision found: " + queen.toString() + " collides with: " + compareQueen.toString() + " - same line");
+					if (queen.isInSameXRow(compareQueen) || 
+							queen.isInSameYColumn(compareQueen)) {
+						System.out.println("Collision found: " + queen.toString() + 
+								" collides with: " + compareQueen.toString() + " - same line");
 						return true;
 					} else {
 						// is in the same diagonal?
-					    if (queen.isInDiagonal(compareQueen.getPositionX(), compareQueen.getPositionY(), N)) {
+					    if (queen.isInSameDiagonal(compareQueen)) {
 					    	return true;
 					    }
 					}

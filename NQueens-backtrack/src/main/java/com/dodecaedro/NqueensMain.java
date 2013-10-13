@@ -9,7 +9,7 @@ import com.dodecaedro.backtrack.nqueens.NQueensNode;
  * Hello world!
  * 
  */
-public class App {
+public class NqueensMain {
 	public static void main(String[] args) {
 		BacktrackNode initialNode = new NQueensNode();
 		BacktrackAlgorithm.solve(initialNode);

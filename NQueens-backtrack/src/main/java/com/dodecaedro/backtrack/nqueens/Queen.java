@@ -17,39 +17,43 @@ public class Queen {
 		return this.positionY;
 	}
 	
-	public boolean isInXRow(int row) {
-		return this.positionX == row; 
+	public boolean isInSameXRow(Queen otherQueen) {		
+		return this.positionY == otherQueen.positionY;
 	}
 	
-	public boolean isInYColumn(int column) {
-		return this.positionY == column;
+	public boolean isInSameYColumn(Queen otherQueen) {
+		return this.positionX == otherQueen.positionX;
 	}
 	
-	public boolean isInDiagonal(int rowX, int columnY, int limit) {
-		// move right and down
-		int currentXRow = positionX+1;
-		int currentYColumn = positionY+1;		
-		while (currentXRow<=limit && currentYColumn<=limit) {
-			if (rowX == currentXRow && columnY == currentYColumn) {
-				System.out.println("Collision found: " + this.toString() + " collides with: " + rowX + ":" + columnY + " - same diagonal");
+	public boolean isInSameDiagonal(Queen otherQueen) {
+		// first diagonal \
+		if ((this.positionX-this.positionY)==(otherQueen.positionX-otherQueen.positionY)) {
+			return true;
+		}
+		// now test /
+		// down and left
+		int posX = this.positionX;
+		int posY = this.positionY;
+		while(posX >= 0 && posY <= NQueensNode.SIZE) {
+			posX--;
+			posY++;
+			if (posX == otherQueen.positionX && posY == otherQueen.positionY) {
 				return true;
-			}
-			currentXRow++;
-			currentYColumn++;
+			}			
 		}
 		
-		// move left and up
-		currentXRow = positionX-1;
-		currentYColumn = positionY-1;		
-		while (currentXRow>=1 && currentYColumn>=1) {
-			if (rowX == currentXRow && columnY == currentYColumn) {
-				System.out.println("Collision found: " + this.toString() + " collides with: " + rowX + ":" + columnY + " - same diagonal");
+        // up and right
+		posX = this.positionX;
+		posY = this.positionY;
+		while(posX <= NQueensNode.SIZE && posX <= NQueensNode.SIZE) {
+			posX++;
+			posY--;
+			if (posX == otherQueen.positionX && posY == otherQueen.positionY) {
 				return true;
-			}
-			currentXRow--;
-			currentYColumn--;
+			}			
 		}
 		
+		// not in any same diagonal
 		return false;
 	}
 	
