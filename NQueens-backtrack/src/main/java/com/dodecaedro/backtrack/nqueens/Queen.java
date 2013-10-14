@@ -26,33 +26,20 @@ public class Queen {
 	}
 	
 	public boolean isInSameDiagonal(Queen otherQueen) {
-		// first diagonal \
+		// based on y = x + a
+		// if they're on the same diagonal, y - x = a
+		
+		// first diagonal /
 		if ((this.positionX-this.positionY)==(otherQueen.positionX-otherQueen.positionY)) {
 			return true;
 		}
-		// now test /
-		// down and left
-		int posX = this.positionX;
-		int posY = this.positionY;
-		while(posX >= 0 && posY <= NQueensNode.SIZE) {
-			posX--;
-			posY++;
-			if (posX == otherQueen.positionX && posY == otherQueen.positionY) {
-				return true;
-			}			
-		}
 		
-        // up and right
-		posX = this.positionX;
-		posY = this.positionY;
-		while(posX <= NQueensNode.SIZE && posX <= NQueensNode.SIZE) {
-			posX++;
-			posY--;
-			if (posX == otherQueen.positionX && posY == otherQueen.positionY) {
-				return true;
-			}			
-		}
-		
+		// in this case, it's y = -x +a
+		// diagonal \
+		if ((this.positionX+this.positionY)==(otherQueen.positionX+otherQueen.positionY)) {
+			return true;
+		}		
+			
 		// not in any same diagonal
 		return false;
 	}
