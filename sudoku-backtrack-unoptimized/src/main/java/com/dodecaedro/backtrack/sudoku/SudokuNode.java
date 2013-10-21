@@ -78,38 +78,46 @@ public class SudokuNode implements BacktrackNode {
   }
 
   public boolean isAnyNumberRepeatedBlock() {
-    for (int currentBlockIndexX = 3; currentBlockIndexX < SIDE_SIZE; currentBlockIndexX += 3) {
-      for (int currentBlockIndexY = 3; currentBlockIndexY < SIDE_SIZE; currentBlockIndexY += 3) {
 
-        for (int posY = currentBlockIndexY - 3; posY < currentBlockIndexY; posY++) {
-          for (int posX = currentBlockIndexX - 3; posX < currentBlockIndexX; posX++) {
+    for (int startBlockY = 0; startBlockY < SIDE_SIZE; startBlockY += 3) {
+      for (int startBlockX = 0; startBlockX < SIDE_SIZE; startBlockX += 3) {
+        if (isAnyNumberRepeatedBlock(startBlockX, startBlockX+2, startBlockY, startBlockY+2)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-            for (int comparePosY = currentBlockIndexY - 3; comparePosY < currentBlockIndexY; comparePosY++) {
-              for (int comparePosX = currentBlockIndexX - 3; comparePosX < currentBlockIndexX; comparePosX++) {
-                if (posX != comparePosX || posY != comparePosY) {
-                  if (board[posX][posY] == board[comparePosX][comparePosY] && this.board[posX][posY] != 0) {
-                    return true;
-                  }
-                }
-              }
-            }
+  public boolean isAnyNumberRepeatedBlock(int startX, int endX, int startY, int endY) {
+    int[] values = new int[SIDE_SIZE];
 
-          }
+    for (int posY = startY ; posY <= endY ; posY++) {
+      for (int posX = startX ; posX <= endX ; posX++) {
+        if (this.board[posX][posY] != 0) {
+          values[this.board[posX][posY]-1]+=1;
         }
       }
     }
 
+    for (int i=0 ; i < SIDE_SIZE ; i++) {
+      if (values[i] > 1 ) {
+        return true;
+      }
+    }
     return false;
   }
 
   public boolean isAnyNumberRepeatedColumn() {
-    for (int posY = 0; posY < SIDE_SIZE; posY++) {
-      for (int posX = 0; posX < SIDE_SIZE; posX++) {
-        for (int comparePosY = 0; comparePosY < SIDE_SIZE; comparePosY++) {
-          if (posY != comparePosY) {
-            if (this.board[posX][posY] == this.board[posX][comparePosY] && this.board[posX][posY] != 0) {
-              return true;
-            }
+    // for each X position
+    for (int column = 0; column < SIDE_SIZE ; column++) {
+
+      // for each element in that column
+      for (int posY = 0; posY < SIDE_SIZE ; posY++) {
+        // check only from that position to the end
+        for (int posYCompare = posY+1 ; posYCompare < SIDE_SIZE ; posYCompare++) {
+          if (this.board[column][posY] == this.board[column][posYCompare] && this.board[column][posY] != 0) {
+            return true;
           }
         }
       }
@@ -118,13 +126,15 @@ public class SudokuNode implements BacktrackNode {
   }
 
   public boolean isAnyNumberRepeatedRow() {
-    for (int posY = 0; posY < SIDE_SIZE; posY++) {
-      for (int posX = 0; posX < SIDE_SIZE; posX++) {
-        for (int comparePosX = 0; comparePosX < SIDE_SIZE; comparePosX++) {
-          if (posX != comparePosX) {
-            if (this.board[posX][posY] == this.board[comparePosX][posY] && this.board[posX][posY] != 0) {
-              return true;
-            }
+    // for each Y position
+    for (int row = 0 ; row < SIDE_SIZE ; row++) {
+
+      // for each element in that row
+      for (int posX = 0 ; posX < SIDE_SIZE ; posX++) {
+        // check only from that position to the end
+        for (int posXCompare = posX+1 ; posXCompare < SIDE_SIZE ; posXCompare++) {
+          if (this.board[posX][row] == this.board[posXCompare][row] && this.board[posX][row] != 0) {
+            return true;
           }
         }
       }

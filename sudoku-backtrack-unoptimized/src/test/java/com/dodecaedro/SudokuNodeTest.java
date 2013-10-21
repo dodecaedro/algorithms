@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit test for simple App.
  */
-public class SudokuTest {
+public class SudokuNodeTest {
   private static SudokuNode goalNode;
   private static SudokuNode nonCompleteNode;
   private static SudokuNode boardWithRepeatedNumbersInRow;
@@ -136,7 +136,8 @@ public class SudokuTest {
 
     boardWithRepeatedNumbersInBlock = new SudokuNode();
     int[][] repeatedNumberBlockArray = copyUsingForLoop(original);
-    repeatedNumberBlockArray[1][4] = 7;
+    //repeatedNumberBlockArray[1][4] = 7;
+    repeatedNumberBlockArray[0][1] = 6;
     boardWithRepeatedNumbersInBlock.setBoard(repeatedNumberBlockArray);
   }
 
