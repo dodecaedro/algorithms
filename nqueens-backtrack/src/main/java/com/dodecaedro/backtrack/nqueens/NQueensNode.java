@@ -33,6 +33,7 @@ public class NQueensNode implements BacktrackNode {
    *
    * @see com.dodecaedro.Node#isLeaf()
    */
+  @Override
   public boolean isLeaf() {
     // it's a leaf when it has all the queens, or there's no point in
     // continuing
@@ -44,6 +45,7 @@ public class NQueensNode implements BacktrackNode {
    *
    * @see com.dodecaedro.Node#isGoal()
    */
+  @Override
   public boolean isGoal() {
     // the goal is to have all the n queens where none endangers any other
     return queens.size() == SIZE && !anyQueenInDanger();
@@ -70,11 +72,17 @@ public class NQueensNode implements BacktrackNode {
     this.childrenNodes.addAll(nodes);
   }
 
+  @Override
   public Collection<BacktrackNode> getChildrenNodes() {
     if (childrenNodes.isEmpty()) {
       generateChildrenNodes();
     }
     return childrenNodes;
+  }
+
+  @Override
+  public void processSolution() {
+    System.out.println("Solution found: " + this.toString());
   }
 
   public boolean anyQueenInDanger() {

@@ -29,6 +29,7 @@ public class SudokuNode implements BacktrackNode {
    *
    * @see com.dodecaedro.backtrack.BacktrackNode#isLeaf()
    */
+  @Override
   public boolean isLeaf() {
     return isAllBoardFull() || isAnyNumberRepeated();
   }
@@ -38,6 +39,7 @@ public class SudokuNode implements BacktrackNode {
    *
    * @see com.dodecaedro.backtrack.BacktrackNode#isGoal()
    */
+  @Override
   public boolean isGoal() {
     return isAllBoardFull() && !isAnyNumberRepeated();
   }
@@ -47,6 +49,7 @@ public class SudokuNode implements BacktrackNode {
    *
    * @see com.dodecaedro.backtrack.BacktrackNode#getChildrenNodes()
    */
+  @Override
   public Collection<BacktrackNode> getChildrenNodes() {
     Collection<BacktrackNode> children = new ArrayList<BacktrackNode>();
     currentNumber+=1;
@@ -66,6 +69,11 @@ public class SudokuNode implements BacktrackNode {
       }
     }
     return children;
+  }
+
+  @Override
+  public void processSolution() {
+    System.out.println("Solution found:" + this.toString());
   }
 
   public void setValuePositionXY(int value, int positionX, int positionY) {

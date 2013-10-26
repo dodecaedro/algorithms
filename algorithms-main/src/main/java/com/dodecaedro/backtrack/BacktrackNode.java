@@ -10,8 +10,7 @@ import java.util.Collection;
  */
 public interface BacktrackNode {
   boolean isLeaf();
-
   boolean isGoal();
-
   Collection<BacktrackNode> getChildrenNodes();
+  void processSolution();
 }

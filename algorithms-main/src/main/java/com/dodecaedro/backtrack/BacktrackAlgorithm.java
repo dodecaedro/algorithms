@@ -14,8 +14,7 @@ public class BacktrackAlgorithm {
   public static boolean solve(BacktrackNode node) {
     if (node.isLeaf()) {
       if (node.isGoal()) {
-        System.out.print("Leaf, solution found - ");
-        System.out.println(node.toString());
+        node.processSolution();
         return true;
       } else {
         return false;
