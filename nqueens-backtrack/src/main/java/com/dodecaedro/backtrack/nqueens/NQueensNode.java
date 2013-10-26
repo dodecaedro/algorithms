@@ -13,7 +13,7 @@ import java.util.List;
  * @author JM
  */
 public class NQueensNode implements BacktrackNode {
-  public static final int SIZE = 4;
+  public int boardSize = 4;
 
   private List<Queen> queens;
   private List<BacktrackNode> childrenNodes;
@@ -23,9 +23,15 @@ public class NQueensNode implements BacktrackNode {
     childrenNodes = new ArrayList<BacktrackNode>();
   }
 
+  public NQueensNode(int size) {
+    this();
+    setBoardSize(size);
+  }
+
   private NQueensNode(NQueensNode copy) {
     this();
     this.queens.addAll(copy.queens);
+    setBoardSize(copy.getBoardSize());
   }
 
   /*
@@ -37,7 +43,7 @@ public class NQueensNode implements BacktrackNode {
   public boolean isLeaf() {
     // it's a leaf when it has all the queens, or there's no point in
     // continuing
-    return queens.size() == SIZE || anyQueenInDanger();
+    return queens.size() == boardSize || anyQueenInDanger();
   }
 
   /*
@@ -48,7 +54,7 @@ public class NQueensNode implements BacktrackNode {
   @Override
   public boolean isGoal() {
     // the goal is to have all the n queens where none endangers any other
-    return queens.size() == SIZE && !anyQueenInDanger();
+    return queens.size() == boardSize && !anyQueenInDanger();
   }
 
   /*
@@ -58,8 +64,8 @@ public class NQueensNode implements BacktrackNode {
    */
   private void generateChildrenNodes() {
     List<BacktrackNode> nodes = new ArrayList<BacktrackNode>();
-    for (int y = 1; y <= SIZE; y++) {
-      for (int x = 1; x <= SIZE; x++) {
+    for (int y = 1; y <= boardSize; y++) {
+      for (int x = 1; x <= boardSize; x++) {
         if (!hasQueen(x, y)) {
           // make a copy of the current node which includes current queens
           NQueensNode childrenNode = new NQueensNode(this);
@@ -86,21 +92,19 @@ public class NQueensNode implements BacktrackNode {
   }
 
   public boolean anyQueenInDanger() {
-    for (Queen queen : this.queens) {
-      for (Queen compareQueen : this.queens) {
-        // don't compare a queen with herself
-        if (!queen.equals(compareQueen)) {
-          // is same horizontal row or vertical column?
-          if (queen.isInSameXRow(compareQueen) ||
-              queen.isInSameYColumn(compareQueen)) {
-            System.out.println("Collision found: " + queen.toString() +
-                " collides with: " + compareQueen.toString() + " - same line");
+    /* compare every queen only with the immediate following
+    * commutative property applies here, so if a != b, then there's
+    * no need to compare b == a */
+    for (int queenIndex = 0 ; queenIndex < queens.size() ; queenIndex++) {
+      for (int compareQueenIndex = queenIndex+1 ; compareQueenIndex < queens.size()-1 ; compareQueenIndex++) {
+        // is same horizontal row or vertical column?
+        if ( queens.get(queenIndex).isInSameXRow(queens.get(compareQueenIndex)) ||
+                queens.get(queenIndex).isInSameYColumn(queens.get(compareQueenIndex))) {
+          return true;
+        } else {
+          // is in the same diagonal?
+          if (queens.get(queenIndex).isInSameDiagonal(queens.get(compareQueenIndex))) {
             return true;
-          } else {
-            // is in the same diagonal?
-            if (queen.isInSameDiagonal(compareQueen)) {
-              return true;
-            }
           }
         }
       }
@@ -130,5 +134,13 @@ public class NQueensNode implements BacktrackNode {
       builder.append(", ");
     }
     return builder.toString();
+  }
+
+  public int getBoardSize() {
+    return boardSize;
+  }
+
+  public void setBoardSize(int boardSize) {
+    this.boardSize = boardSize;
   }
 }

@@ -10,7 +10,10 @@ import com.dodecaedro.backtrack.nqueens.NQueensNode;
  */
 public class NqueensMain {
   public static void main(String[] args) {
-    BacktrackNode initialNode = new NQueensNode();
+    System.out.println("Start processing...");
+    long startTime = System.currentTimeMillis();
+    BacktrackNode initialNode = new NQueensNode(8);
     BacktrackAlgorithm.solve(initialNode);
+    System.out.println("Processing finished. Took " + (System.currentTimeMillis()-startTime) + "ms");
   }
 }
