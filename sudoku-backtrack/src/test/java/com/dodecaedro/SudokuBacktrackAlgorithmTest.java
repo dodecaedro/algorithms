@@ -1,7 +1,7 @@
 package com.dodecaedro;
 
 import com.dodecaedro.backtrack.BacktrackAlgorithm;
-import com.dodecaedro.backtrack.sudoku.SudokuNode;
+import com.dodecaedro.backtrack.sudoku.SudokuNodeOption1;
 import com.dodecaedro.backtrack.sudoku.SudokuUtils;
 import org.junit.Test;
 
@@ -14,11 +14,11 @@ import static org.junit.Assert.assertTrue;
 public class SudokuBacktrackAlgorithmTest {
   @Test
   public void solveTest() {
-    SudokuNode node = new SudokuNode();
+    SudokuNodeOption1 node = new SudokuNodeOption1();
     node.setBoard(SudokuUtils.generateSolutionBoard());
 
-    for (int i=0; i<SudokuNode.SIDE_SIZE ; i++) {
-      node.getBoard()[i][SudokuNode.SIDE_SIZE-1] = 0;
+    for (int i=0; i< SudokuNodeOption1.SIDE_SIZE ; i++) {
+      node.getBoard()[i][SudokuNodeOption1.SIDE_SIZE-1] = 0;
     }
 
     assertTrue(BacktrackAlgorithm.solve(node));

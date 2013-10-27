@@ -1,7 +1,7 @@
 package com.dodecaedro;
 
 import com.dodecaedro.backtrack.BacktrackNode;
-import com.dodecaedro.backtrack.sudoku.SudokuNode;
+import com.dodecaedro.backtrack.sudoku.SudokuNodeOption1;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,15 +15,15 @@ import static org.junit.Assert.assertTrue;
  * Unit test for simple App.
  */
 public class SudokuNodeTest {
-  private static SudokuNode goalNode;
-  private static SudokuNode nonCompleteNode;
-  private static SudokuNode boardWithRepeatedNumbersInRow;
-  private static SudokuNode boardWithRepeatedNumbersInColumn;
-  private static SudokuNode boardWithRepeatedNumbersInBlock;
+  private static SudokuNodeOption1 goalNode;
+  private static SudokuNodeOption1 nonCompleteNode;
+  private static SudokuNodeOption1 boardWithRepeatedNumbersInRow;
+  private static SudokuNodeOption1 boardWithRepeatedNumbersInColumn;
+  private static SudokuNodeOption1 boardWithRepeatedNumbersInBlock;
 
   @BeforeClass
   public static void setUp() {
-    goalNode = new SudokuNode();
+    goalNode = new SudokuNodeOption1();
 
     goalNode.setValuePositionXY(6, 0, 0);
     goalNode.setValuePositionXY(4, 1, 0);
@@ -122,19 +122,19 @@ public class SudokuNodeTest {
     int[][] repeatedNumberArray = copyUsingForLoop(original);
     repeatedNumberArray[0][2] = 6;
 
-    nonCompleteNode = new SudokuNode();
+    nonCompleteNode = new SudokuNodeOption1();
     nonCompleteNode.setBoard(nonCompleteArray);
 
-    boardWithRepeatedNumbersInRow = new SudokuNode();
+    boardWithRepeatedNumbersInRow = new SudokuNodeOption1();
     boardWithRepeatedNumbersInRow.setBoard(repeatedNumberArray);
 
-    boardWithRepeatedNumbersInColumn = new SudokuNode();
+    boardWithRepeatedNumbersInColumn = new SudokuNodeOption1();
 
     int[][] repeatedNumberColumnArray = copyUsingForLoop(original);
     repeatedNumberColumnArray[2][0] = 6;
     boardWithRepeatedNumbersInColumn.setBoard(repeatedNumberColumnArray);
 
-    boardWithRepeatedNumbersInBlock = new SudokuNode();
+    boardWithRepeatedNumbersInBlock = new SudokuNodeOption1();
     int[][] repeatedNumberBlockArray = copyUsingForLoop(original);
     //repeatedNumberBlockArray[1][4] = 7;
     repeatedNumberBlockArray[0][1] = 6;
@@ -181,12 +181,12 @@ public class SudokuNodeTest {
     assertTrue(boardWithRepeatedNumbersInColumn.isLeaf());
     assertTrue(boardWithRepeatedNumbersInBlock.isLeaf());
     assertFalse(nonCompleteNode.isLeaf());
-    assertFalse(new SudokuNode().isLeaf());
+    assertFalse(new SudokuNodeOption1().isLeaf());
   }
 
   @Test
   public void testGenerateChildren() {
-    SudokuNode emptyNode = new SudokuNode();
+    SudokuNodeOption1 emptyNode = new SudokuNodeOption1();
     Collection<BacktrackNode> children = emptyNode.getChildrenNodes();
 
     assertEquals(81, children.size());
@@ -197,27 +197,27 @@ public class SudokuNodeTest {
 
   @Test
   public void testResetCounter() {
-    SudokuNode startNode = new SudokuNode(8);
+    SudokuNodeOption1 startNode = new SudokuNodeOption1(8);
     startNode.setValuePositionXY(8, 0, 0);
     Collection<BacktrackNode> children = startNode.getChildrenNodes();
     BacktrackNode firstChildren = children.iterator().next();
     Collection<BacktrackNode> grandChildren = firstChildren.getChildrenNodes();
     BacktrackNode firstGrandChildren = grandChildren.iterator().next();
 
-    assertEquals(((SudokuNode)firstChildren).getBoard()[1][0], 9);
-    assertEquals(((SudokuNode)firstGrandChildren).getBoard()[2][0], 1);
+    assertEquals(((SudokuNodeOption1)firstChildren).getBoard()[1][0], 9);
+    assertEquals(((SudokuNodeOption1)firstGrandChildren).getBoard()[2][0], 1);
   }
 
   @Test
   public void testStartCounter() {
-    SudokuNode startNode = new SudokuNode();
+    SudokuNodeOption1 startNode = new SudokuNodeOption1();
     Collection<BacktrackNode> children = startNode.getChildrenNodes();
     BacktrackNode firstChildren = children.iterator().next();
     Collection<BacktrackNode> grandChildren = firstChildren.getChildrenNodes();
     BacktrackNode firstGrandChildren = grandChildren.iterator().next();
 
-    assertEquals(((SudokuNode)firstChildren).getBoard()[0][0], 1);
-    assertEquals(((SudokuNode)firstGrandChildren).getBoard()[1][0], 2);
+    assertEquals(((SudokuNodeOption1)firstChildren).getBoard()[0][0], 1);
+    assertEquals(((SudokuNodeOption1)firstGrandChildren).getBoard()[1][0], 2);
   }
 
   private static int[][] copyUsingForLoop(int[][] aArray) {

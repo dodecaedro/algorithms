@@ -11,16 +11,16 @@ import java.util.Collection;
 /**
  * @author JM
  */
-public class SudokuNode implements BacktrackNode {
+public class SudokuNodeOption1 implements BacktrackNode {
   public final static int SIDE_SIZE = 9;
   private int[][] board = new int[SIDE_SIZE][SIDE_SIZE];
   public int currentNumber;
 
-  public SudokuNode() {
+  public SudokuNodeOption1() {
     this.currentNumber = 0;
   }
 
-  public SudokuNode(int startNumber) {
+  public SudokuNodeOption1(int startNumber) {
     this.currentNumber = startNumber;
   }
 
@@ -61,7 +61,7 @@ public class SudokuNode implements BacktrackNode {
     for (int posY = 0; posY < SIDE_SIZE; posY++) {
       for (int posX = 0; posX < SIDE_SIZE; posX++) {
         if (!isPositionUsed(posX, posY)) {
-          SudokuNode childrenNode = new SudokuNode(currentNumber);
+          SudokuNodeOption1 childrenNode = new SudokuNodeOption1(currentNumber);
           childrenNode.setBoard(this.getBoard());
           childrenNode.setValuePositionXY(currentNumber, posX, posY);
           children.add(childrenNode);
