@@ -1,7 +1,7 @@
 package com.dodecaedro;
 
 import com.dodecaedro.backtrack.BacktrackNode;
-import com.dodecaedro.backtrack.sudoku.SudokuNodeBlockBased;
+import com.dodecaedro.backtrack.sudoku.SudokuNodeWithPruning;
 import com.dodecaedro.backtrack.sudoku.SudokuUtils;
 import org.junit.Test;
 
@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: JM
@@ -33,12 +33,182 @@ public class SudokuNodeBlockTest {
             {0,0,0,9,0,8,0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
 
     assertEquals(block.numberPositionsUsedBlock(0, 0), 3);
     assertEquals(block.numberPositionsUsedBlock(0, 6), 2);
     assertEquals(block.numberPositionsUsedBlock(3, 6), 4);
+  }
+
+  @Test
+  public void testIsNotFull() {
+    int[][] board = new int[][]{
+            {0,3,0,6,0,5,0,0,0},
+            {6,0,0,0,9,0,0,0,2},
+            {0,7,0,1,0,0,0,0,6},
+            {0,9,0,0,0,0,0,0,0},
+            {8,1,0,0,5,0,0,6,9},
+            {0,0,0,0,0,0,0,8,0},
+            {4,0,0,0,0,3,0,2,0},
+            {9,0,0,0,2,0,0,0,5},
+            {0,0,0,9,0,8,0,3,0}
+    };
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(board);
+
+    assertFalse(block.isAllBoardFull());
+  }
+
+  @Test
+  public void testIsFull() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(SudokuUtils.generateSolutionBoard());
+
+    assertTrue(block.isAllBoardFull());
+  }
+
+  @Test
+  public void testSolutionIsGoal() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(SudokuUtils.generateSolutionBoard());
+
+    assertTrue(block.isGoal());
+  }
+
+  @Test
+  public void testSolutionIsLeaf() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(SudokuUtils.generateSolutionBoard());
+
+    assertTrue(block.isLeaf());
+  }
+
+  @Test
+  public void testIncompleteIsNotSolution() {
+    int[][] board = new int[][]{
+            {0,3,0,6,0,5,0,0,0},
+            {6,0,0,0,9,0,0,0,2},
+            {0,7,0,1,0,0,0,0,6},
+            {0,9,0,0,0,0,0,0,0},
+            {8,1,0,0,5,0,0,6,9},
+            {0,0,0,0,0,0,0,8,0},
+            {4,0,0,0,0,3,0,2,0},
+            {9,0,0,0,2,0,0,0,5},
+            {0,0,0,9,0,8,0,3,0}
+    };
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(board);
+
+    assertFalse(block.isGoal());
+  }
+
+  @Test
+  public void testCompleteButNotGoal() {
+    int[][] board = new int[][]{
+            {1,2,3, 4,5,6, 7,8,9},
+            {4,5,6, 7,8,9, 1,2,3},
+            {7,8,9, 1,2,3, 4,5,6},
+
+            {2,8,4, 5,6,7, 8,9,1},
+            {5,6,7, 8,9,1, 2,3,4},
+            {8,9,1, 2,3,4, 5,6,7},
+
+            {3,4,5, 6,7,8, 9,1,2},
+            {6,7,8, 9,1,2, 3,4,5},
+            {9,1,2, 3,4,5, 6,7,8}
+    };
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(board);
+
+    assertFalse(block.isGoal());
+  }
+
+  @Test
+  public void testCompleteButNotGoalIsLeaf() {
+    int[][] board = new int[][]{
+            {1,2,3, 4,5,6, 7,8,9},
+            {4,5,6, 7,8,9, 1,2,3},
+            {7,8,9, 1,2,3, 4,5,6},
+
+            {2,8,4, 5,6,7, 8,9,1},
+            {5,6,7, 8,9,1, 2,3,4},
+            {8,9,1, 2,3,4, 5,6,7},
+
+            {3,4,5, 6,7,8, 9,1,2},
+            {6,7,8, 9,1,2, 3,4,5},
+            {9,1,2, 3,4,5, 6,7,8}
+    };
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(board);
+
+    assertTrue(block.isLeaf());
+  }
+
+  @Test
+  public void testIncompleteAndRepeatedLeafLeaf() {
+    int[][] board = new int[][]{
+            {1,2,3, 4,5,6, 7,8,9},
+            {4,5,6, 7,8,9, 1,2,3},
+            {7,8,9, 1,2,3, 4,5,6},
+
+            {2,8,4, 5,6,7, 8,6,1},
+            {5,6,7, 8,9,1, 2,3,4},
+            {8,9,1, 2,3,4, 5,6,7},
+
+            {3,4,5, 6,7,8, 9,1,2},
+            {6,7,8, 9,1,2, 3,4,5},
+            {9,1,2, 3,4,5, 6,0,0}
+    };
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(board);
+
+    assertTrue(block.isLeaf());
+  }
+
+  @Test
+  public void testNumberRepeatedColumn() {
+    int[][] board = new int[][]{
+            {1,2,3, 4,5,6, 7,8,9},
+            {4,5,6, 7,8,9, 1,2,3},
+            {7,8,9, 1,2,3, 4,5,6},
+
+            {2,8,4, 5,6,7, 8,9,1},
+            {5,6,7, 8,9,1, 2,3,4},
+            {8,9,1, 2,3,4, 5,6,7},
+
+            {3,4,5, 6,7,8, 9,1,2},
+            {6,7,8, 9,1,2, 3,4,5},
+            {9,1,2, 3,4,5, 6,7,8}
+    };
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(board);
+
+    assertTrue(block.isAnyNumberRepeatedColumn());
+  }
+
+  @Test
+  public void testNotRepeatedWithZeros() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    assertFalse(block.isAnyNumberRepeatedColumn());
+    assertFalse(block.isAnyNumberRepeatedRow());
+    assertFalse(block.isAnyNumberRepeatedAnyBlock());
+    assertFalse(block.isAnyNumberRepeated());
+    assertFalse(block.isAnyNumberRepeatedBlock(0,0));
+  }
+
+  @Test
+  public void testNumberRepeatedBlock() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(SudokuUtils.generateSolutionBoard());
+    block.setValuePositionXY(1,1,0);
+    assertTrue(block.isAnyNumberRepeatedAnyBlock());
   }
 
   @Test
@@ -57,7 +227,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 9,0,8, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     int[] mostLimitedBlock = block.getMostLimitedBlock();
     assertEquals(6, mostLimitedBlock[0]);
@@ -80,7 +250,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 9,0,8, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertEquals(6, block.availableNumbersForBlock(new int[]{0, 0}).size());
     assertEquals(8, block.availableNumbersForBlock(new int[]{3, 3}).size());
@@ -103,7 +273,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 9,0,8, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertFalse(block.existsNumberInRow(2, 0));
     assertTrue(block.existsNumberInRow(6, 0));
@@ -128,7 +298,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 9,0,8, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertFalse(block.existsNumberInColumn(2, 0));
     assertTrue(block.existsNumberInColumn(6, 0));
@@ -153,7 +323,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 7,8,9, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertFalse(block.isAnyNumberRepeatedBlock(3, 0));
     assertTrue(block.isAnyNumberRepeatedBlock(3, 6));
@@ -161,11 +331,11 @@ public class SudokuNodeBlockTest {
 
   @Test
   public void testBlockBelongingPosition() {
-    int[] block1 = SudokuNodeBlockBased.getBlockBelongsPosition(4,5);
+    int[] block1 = SudokuNodeWithPruning.getBlockBelongsPosition(4, 5);
     assertEquals(3, block1[0]);
     assertEquals(3, block1[1]);
 
-    int[] block2 = SudokuNodeBlockBased.getBlockBelongsPosition(7,6);
+    int[] block2 = SudokuNodeWithPruning.getBlockBelongsPosition(7, 6);
     assertEquals(6, block2[0]);
     assertEquals(6, block2[1]);
   }
@@ -186,7 +356,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 9,8,9, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
 
 
@@ -216,7 +386,7 @@ public class SudokuNodeBlockTest {
             {0,0,0, 9,8,9, 0,3,0}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
 
     assertTrue(block.existsNumberInBlock(5, 0, 0));
@@ -239,7 +409,7 @@ public class SudokuNodeBlockTest {
             {9,1,2, 3,4,5, 6,7,8}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertTrue(block.hasBlockSolution(0, 3));
   }
@@ -260,7 +430,7 @@ public class SudokuNodeBlockTest {
             {9,1,0, 3,4,5, 6,7,8}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertFalse(block.hasBlockSolution(0, 3));
   }
@@ -281,7 +451,7 @@ public class SudokuNodeBlockTest {
             {9,1,0, 3,4,5, 6,7,8}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertTrue(block.haveAdjacentBlocksSolution(0, 0));
   }
@@ -302,7 +472,7 @@ public class SudokuNodeBlockTest {
             {9,1,0, 3,4,5, 6,7,8}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertFalse(block.haveAdjacentBlocksSolution(0, 0));
   }
@@ -323,7 +493,7 @@ public class SudokuNodeBlockTest {
             {9,1,2, 3,4,5, 6,2,8}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     assertFalse(block.haveAdjacentBlocksSolution(0, 0));
   }
@@ -332,7 +502,7 @@ public class SudokuNodeBlockTest {
   public void fillBlockTest() {
     List<Integer> numbers = Arrays.asList(new Integer[]{7, 8, 9});
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setValuePositionXY(1, 0,0);
     block.setValuePositionXY(2, 1,0);
     block.setValuePositionXY(3, 2,0);
@@ -342,6 +512,23 @@ public class SudokuNodeBlockTest {
 
     Collection<BacktrackNode> children = block.fillBlock(0,0, numbers);
     assertEquals(6, children.size());
+  }
+
+  @Test
+  public void testGenerateChildren() {
+    List<Integer> numbers = Arrays.asList(new Integer[]{8, 9});
+
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setValuePositionXY(1, 0,0);
+    block.setValuePositionXY(2, 1,0);
+    block.setValuePositionXY(3, 2,0);
+    block.setValuePositionXY(4, 0,1);
+    block.setValuePositionXY(5, 1,1);
+    block.setValuePositionXY(6, 2,1);
+    block.setValuePositionXY(7, 0,2);
+
+    Collection<BacktrackNode> children = block.getChildrenNodes();
+    assertEquals(2, children.size());
   }
 
   @Test
@@ -360,10 +547,25 @@ public class SudokuNodeBlockTest {
             {9,1,2, 3,4,5, 6,7,8}
     };
 
-    SudokuNodeBlockBased block = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
     block.setBoard(board);
     int[] blockCoords = block.getMostLimitedBlock();
     assertEquals(3, blockCoords[0]);
     assertEquals(0, blockCoords[1]);
+  }
+
+  @Test
+  public void availableNumbersPositionUsed() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(SudokuUtils.generateSolutionBoard());
+    assertTrue(block.availableNumbersForBlock(new int[]{0,0}).isEmpty());
+    assertTrue(block.availableNumbersPosition(0,0).isEmpty());
+  }
+
+  @Test
+  public void goalHasNoNumbersRepeated() {
+    SudokuNodeWithPruning block = new SudokuNodeWithPruning();
+    block.setBoard(SudokuUtils.generateSolutionBoard());
+    assertFalse(block.isAnyNumberRepeated());
   }
 }

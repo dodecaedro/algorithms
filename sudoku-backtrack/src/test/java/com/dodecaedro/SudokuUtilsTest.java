@@ -1,6 +1,6 @@
 package com.dodecaedro;
 
-import com.dodecaedro.backtrack.sudoku.SudokuNodeOption1;
+import com.dodecaedro.backtrack.sudoku.SudokuNodeWithPruning;
 import com.dodecaedro.backtrack.sudoku.SudokuUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +12,11 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/20/13 * Time: 8:27 PM
  */
 public class SudokuUtilsTest {
-  private SudokuNodeOption1 goalNode;
+  private SudokuNodeWithPruning goalNode;
 
   @Before
   public void setUp() {
-    goalNode = new SudokuNodeOption1();
+    goalNode = new SudokuNodeWithPruning();
     goalNode.setBoard(SudokuUtils.generateSolutionBoard());
   }
 

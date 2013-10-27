@@ -1,7 +1,7 @@
 package com.dodecaedro;
 
 import com.dodecaedro.backtrack.BacktrackAlgorithm;
-import com.dodecaedro.backtrack.sudoku.SudokuNodeBlockBased;
+import com.dodecaedro.backtrack.sudoku.SudokuNodeWithPruning;
 
 /**
  * User: JM
@@ -9,7 +9,7 @@ import com.dodecaedro.backtrack.sudoku.SudokuNodeBlockBased;
  */
 public class SudokuHard {
   public static void main(String[] args) {
-    SudokuNodeBlockBased initialNode = new SudokuNodeBlockBased();
+    SudokuNodeWithPruning initialNode = new SudokuNodeWithPruning();
     int[][] board = new int[][]{
             {0,6,1, 2,0,0, 0,0,0},
             {2,0,0, 3,0,4, 0,0,0},
