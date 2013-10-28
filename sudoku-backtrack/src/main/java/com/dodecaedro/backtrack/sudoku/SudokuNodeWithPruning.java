@@ -29,7 +29,7 @@ public class SudokuNodeWithPruning implements BacktrackNode {
   }
 
   public SudokuNodeWithPruning(SudokuNodeWithPruning copy) {
-    this.board = SudokuUtils.copyUsingForLoop(copy.getBoard());
+    this.board = SudokuUtils.copyArray(copy.getBoard());
   }
 
   @Override

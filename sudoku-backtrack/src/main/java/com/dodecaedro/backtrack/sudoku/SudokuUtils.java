@@ -23,7 +23,12 @@ public class SudokuUtils {
     return field;
   }
 
-  public static int[][] copyUsingForLoop(int[][] aArray) {
+  public static int[][] copyArray(int[][] aArray) {
+    return copyArrayUsingSystemArrayCopy(aArray);
+  }
+
+  // for reference only to compare with other methods
+  public static int[][] copyArrayUsingForLoop(int[][] aArray) {
     int[][] copy = new int[aArray.length][aArray.length];
     for (int idy = 0; idy < aArray.length; ++idy) {
       for (int idx = 0; idx < aArray.length; ++idx) {
@@ -31,5 +36,14 @@ public class SudokuUtils {
       }
     }
     return copy;
+  }
+
+  public static int[][] copyArrayUsingSystemArrayCopy(int[][] src) {
+    int length = src.length;
+    int[][] target = new int[length][src[0].length];
+    for (int i = 0; i < length; i++) {
+      System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+    }
+    return target;
   }
 }

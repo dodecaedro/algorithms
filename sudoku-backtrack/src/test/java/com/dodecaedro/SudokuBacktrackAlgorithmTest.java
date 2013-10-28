@@ -20,6 +20,7 @@ public class SudokuBacktrackAlgorithmTest {
 
   @Before
   public void setUpOutput() {
+    // process solution prints to screen. change it to different stream
     System.setOut(new PrintStream(new ByteArrayOutputStream()));
   }
 
