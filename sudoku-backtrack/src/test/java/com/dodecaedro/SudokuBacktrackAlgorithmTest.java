@@ -3,7 +3,12 @@ package com.dodecaedro;
 import com.dodecaedro.backtrack.BacktrackAlgorithm;
 import com.dodecaedro.backtrack.sudoku.SudokuNodeWithPruning;
 import com.dodecaedro.backtrack.sudoku.SudokuUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,6 +17,12 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/20/13 Time: 8:22 PM
  */
 public class SudokuBacktrackAlgorithmTest {
+
+  @Before
+  public void setUpOutput() {
+    System.setOut(new PrintStream(new ByteArrayOutputStream()));
+  }
+
   @Test
   public void solveTest() {
     SudokuNodeWithPruning node = new SudokuNodeWithPruning();
@@ -22,5 +33,10 @@ public class SudokuBacktrackAlgorithmTest {
     }
 
     assertTrue(BacktrackAlgorithm.solve(node));
+  }
+
+  @After
+  public void cleanUpStreams() {
+    System.setOut(null);
   }
 }

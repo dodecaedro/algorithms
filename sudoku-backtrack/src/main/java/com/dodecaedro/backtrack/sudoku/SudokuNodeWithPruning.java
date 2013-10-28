@@ -154,23 +154,22 @@ public class SudokuNodeWithPruning implements BacktrackNode {
   }
 
   public int[] getMostLimitedBlock() {
-    Iterator<int[]> blockIterator = SudokuUtils.blocks.values().iterator();
     int[] blockCoordinates = new int[]{0, 0};
     int currentUsedNumber = 0;
 
-    while (blockIterator.hasNext()) {
-      int[] currentBlock = blockIterator.next();
-      int usedNumbers = numberPositionsUsedBlock(currentBlock[0], currentBlock[1]);
+    for (int blockIndex = 0 ; blockIndex < SIDE_SIZE ; blockIndex ++) {
+      int blockStartX = (blockIndex % 3) * 3;
+      int blockStartY = (blockIndex / 3) * 3;
 
+      int usedNumbers = numberPositionsUsedBlock(blockStartX, blockStartY);
       if (usedNumbers < 9 && usedNumbers > currentUsedNumber) {
         currentUsedNumber = usedNumbers;
-        blockCoordinates = currentBlock;
+        blockCoordinates = new int[]{blockStartX, blockStartY};
         if (currentUsedNumber == 8) {
           return blockCoordinates;
         }
       }
     }
-
     return blockCoordinates;
   }
 
@@ -229,11 +228,11 @@ public class SudokuNodeWithPruning implements BacktrackNode {
   }
 
   public boolean isAnyNumberRepeatedAnyBlock() {
-    Iterator<int[]> blockIterator = SudokuUtils.blocks.values().iterator();
+    for (int blockIndex = 0 ; blockIndex < SIDE_SIZE ; blockIndex ++) {
+      int blockStartX = (blockIndex % 3) * 3;
+      int blockStartY = (blockIndex / 3) * 3;
 
-    while (blockIterator.hasNext()) {
-      int[] blockCoordinates = blockIterator.next();
-      if (isAnyNumberRepeatedBlock(blockCoordinates[0], blockCoordinates[1])) {
+      if (isAnyNumberRepeatedBlock(blockStartX, blockStartY)) {
         return true;
       }
     }
