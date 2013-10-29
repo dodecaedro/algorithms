@@ -32,6 +32,10 @@ public class SudokuNodeWithPruning implements BacktrackNode {
     this.board = SudokuUtils.copyArray(copy.getBoard());
   }
 
+  public SudokuNodeWithPruning(int[][] board) {
+    this.board = SudokuUtils.copyArray(board);
+  }
+
   @Override
   public boolean isLeaf() {
     return isAllBoardFull() || isAnyNumberRepeated();
